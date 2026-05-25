@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chart Analyzer — AI Consensus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #00ff88;
+    --accent2: #ff6b35;
+    --accent3: #4a9eff;
+    --text: #e8e8f0;
+    --muted: #555570;
+    --bull: #00ff88;
+    --bear: #ff4466;
+    --neutral: #ffcc44;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, #888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* API Keys Section */
+  .keys-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .keys-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .keys-title {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .keys-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .keys-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .keys-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) { .keys-grid { grid-template-columns: 1fr; } }
+
+  .key-group label {
+    display: block;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .key-group input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .key-group input:focus { border-color: var(--accent); }
+  .key-group input.valid { border-color: var(--bull); }
+
+  .save-keys {
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .save-keys:hover { background: var(--accent); color: var(--bg); }
+
+  /* Upload Section */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--surface);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(0,255,136,0.04);
+  }
+  .upload-zone.has-image { padding: 16px; }
+
+  .upload-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .upload-text {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .upload-sub {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  #fileInput { display: none; }
+
+  #previewImg {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  /* Instrument selector */
+  .controls-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .instrument-select {
+    flex: 1;
+    min-width: 150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .instrument-select:focus { border-color: var(--accent); }
+
+  /* Analyze Button */
+  .analyze-btn {
+    flex: 2;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    padding: 16px 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,255,136,0.3); }
+  .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .analyze-btn.loading { background: var(--muted); }
+
+  /* Progress */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 2px;
+  }
+
+  /* Results */
+  .results { display: none; }
+
+  .results-header {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .models-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) { .models-grid { grid-template-columns: 1fr; } }
+
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .model-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .model-card.claude::before { background: var(--accent3); }
+  .model-card.chatgpt::before { background: #74aa9c; }
+  .model-card.gemini::before { background: #4285f4; }
+
+  .model-card.bullish { border-color: rgba(0,255,136,0.3); }
+  .model-card.bearish { border-color: rgba(255,68,102,0.3); }
+
+  .model-name {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .model-prediction {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .model-prediction.bullish { color: var(--bull); }
+  .model-prediction.bearish { color: var(--bear); }
+  .model-prediction.neutral { color: var(--neutral); }
+
+  .model-reason {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .model-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+
+  .dot-pulse {
+    display: flex;
+    gap: 4px;
+  }
+  .dot-pulse span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.2s infinite;
+  }
+  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Verdict */
+  .verdict-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+  }
+
+  .verdict-label {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .verdict-prediction {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .verdict-prediction.bullish { color: var(--bull); }
+  .verdict-prediction.bearish { color: var(--bear); }
+  .verdict-prediction.neutral { color: var(--neutral); }
+
+  .verdict-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #aaa;
+  }
+
+  /* Consensus bar */
+  .consensus-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    align-items: center;
+  }
+  .consensus-label {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .consensus-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .consensus-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+  .consensus-fill.bullish { background: var(--bull); }
+  .consensus-fill.bearish { background: var(--bear); }
+  .consensus-pct {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--text);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Error */
+  .error-msg {
+    background: rgba(255,68,102,0.1);
+    border: 1px solid rgba(255,68,102,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--bear);
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* Reset btn */
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .timestamp {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">// AI CONSENSUS ENGINE</div>
+    <h1>Chart <span>Analyzer</span></h1>
+    <div class="subtitle">Claude · ChatGPT · Gemini — one upload, one verdict</div>
+  </header>
+
+  <!-- API Keys -->
+  <div class="keys-section">
+    <div class="keys-header">
+      <div class="keys-title">// API Keys</div>
+      <button class="keys-toggle" onclick="toggleKeys()">HIDE</button>
+    </div>
+    <div id="keysBody">
+      <div class="keys-grid">
+        <div class="key-group">
+          <label>ANTHROPIC (CLAUDE)</label>
+          <input type="password" id="claudeKey" placeholder="sk-ant-..." oninput="validateKey(this)">
+        </div>
+        <div class="key-group">
+          <label>OPENAI (CHATGPT)</label>
+          <input type="password" id="openaiKey" placeholder="sk-..." oninput="validateKey(this)">
+        </div>
+        <div class="key-group">
+          <label>GOOGLE (GEMINI)</label>
+          <input type="password" id="geminiKey" placeholder="AIza..." oninput="validateKey(this)">
+        </div>
+      </div>
+      <button class="save-keys" onclick="saveKeys()">SAVE KEYS LOCALLY</button>
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
+    ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+    <span class="upload-icon" id="uploadIcon">📊</span>
+    <div class="upload-text" id="uploadText">Drop your chart screenshot here</div>
+    <div class="upload-sub" id="uploadSub">or click to browse — PNG, JPG supported</div>
+    <img id="previewImg" alt="Chart preview">
+  </div>
+  <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
+
+  <!-- Controls -->
+  <div class="controls-row">
+    <select class="instrument-select" id="instrument">
+      <option value="USDJPY">USD/JPY</option>
+      <option value="GBPJPY">GBP/JPY</option>
+      <option value="EURUSD">EUR/USD</option>
+      <option value="BTCUSD">BTC/USD</option>
+      <option value="XAUUSD">XAU/USD (Gold)</option>
+      <option value="other">Other</option>
+    </select>
+    <select class="instrument-select" id="timeframe">
+      <option value="15M">15 Minute</option>
+      <option value="1H">1 Hour</option>
+      <option value="4H">4 Hour</option>
+      <option value="1D">Daily</option>
+    </select>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">ANALYZE CHART</button>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results">
+    <div class="results-header">// Individual Model Analysis</div>
+    <div class="models-grid">
+      <div class="model-card claude" id="claudeCard">
+        <div class="model-name">CLAUDE</div>
+        <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
+      </div>
+      <div class="model-card chatgpt" id="chatgptCard">
+        <div class="model-name">CHATGPT</div>
+        <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
+      </div>
+      <div class="model-card gemini" id="geminiCard">
+        <div class="model-name">GEMINI</div>
+        <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
+      </div>
+    </div>
+
+    <div class="verdict-card" id="verdictCard" style="display:none">
+      <div class="verdict-label">// Combined Verdict</div>
+      <div class="verdict-prediction" id="verdictPrediction">—</div>
+      <div class="verdict-text" id="verdictText"></div>
+      <div class="consensus-row">
+        <div class="consensus-label">BULLISH</div>
+        <div class="consensus-track"><div class="consensus-fill bullish" id="bullFill" style="width:0%"></div></div>
+        <div class="consensus-pct" id="bullPct">0%</div>
+      </div>
+      <div class="consensus-row">
+        <div class="consensus-label">BEARISH</div>
+        <div class="consensus-track"><div class="consensus-fill bearish" id="bearFill" style="width:0%"></div></div>
+        <div class="consensus-pct" id="bearPct">0%</div>
+      </div>
+      <div class="timestamp" id="analysisTime"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">↺ ANALYZE NEW CHART</button>
+  </div>
+</div>
+
+<script>
+let imageBase64 = null;
+let imageType = null;
+let keysVisible = true;
+
+// Load saved keys
+window.onload = () => {
+  const ck = localStorage.getItem('claudeKey');
+  const ok = localStorage.getItem('openaiKey');
+  const gk = localStorage.getItem('geminiKey');
+  if (ck) { document.getElementById('claudeKey').value = ck; validateKey(document.getElementById('claudeKey')); }
+  if (ok) { document.getElementById('openaiKey').value = ok; validateKey(document.getElementById('openaiKey')); }
+  if (gk) { document.getElementById('geminiKey').value = gk; validateKey(document.getElementById('geminiKey')); }
+};
+
+function saveKeys() {
+  const ck = document.getElementById('claudeKey').value.trim();
+  const ok = document.getElementById('openaiKey').value.trim();
+  const gk = document.getElementById('geminiKey').value.trim();
+  if (ck) localStorage.setItem('claudeKey', ck);
+  if (ok) localStorage.setItem('openaiKey', ok);
+  if (gk) localStorage.setItem('geminiKey', gk);
+  const btn = document.querySelector('.save-keys');
+  btn.textContent = '✓ SAVED';
+  setTimeout(() => btn.textContent = 'SAVE KEYS LOCALLY', 2000);
+}
+
+function validateKey(input) {
+  input.classList.toggle('valid', input.value.length > 10);
+}
+
+function toggleKeys() {
+  keysVisible = !keysVisible;
+  document.getElementById('keysBody').style.display = keysVisible ? 'block' : 'none';
+  document.querySelector('.keys-toggle').textContent = keysVisible ? 'HIDE' : 'SHOW';
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag-over');
+}
+function handleDragLeave() {
+  document.getElementById('uploadZone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processFile(file);
+}
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  imageType = file.type;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imageBase64 = e.target.result.split(',')[1];
+    const preview = document.getElementById('previewImg');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('uploadIcon').style.display = 'none';
+    document.getElementById('uploadText').textContent = file.name;
+    document.getElementById('uploadSub').textContent = 'Click to change image';
+    document.getElementById('uploadZone').classList.add('has-image');
+  };
+  reader.readAsDataURL(file);
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 6000);
+}
+
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+const PROMPT = (instrument, tf) =>
+  `You are analyzing a ${instrument} ${tf} candlestick chart. Focus ONLY on the current active candle (the rightmost, still-forming candle). Predict whether it will close BULLISH or BEARISH. Keep your response short and in this exact format:
+
+Prediction: Bullish [OR] Bearish
+Reason: [1-3 sentences maximum, focus on the single strongest signal visible]
+
+Do not overexplain. No markdown. No headers.`;
+
+async function callClaude(imageB64, imgType, instrument, tf) {
+  const key = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
+  if (!key) throw new Error('Missing Claude API key');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 300,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: imgType, data: imageB64 } },
+          { type: 'text', text: PROMPT(instrument, tf) }
+        ]
+      }]
+    })
+  });
+  if (!res.ok) throw new Error(`Claude: ${res.status}`);
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+async function callOpenAI(imageB64, imgType, instrument, tf) {
+  const key = document.getElementById('openaiKey').value.trim() || localStorage.getItem('openaiKey');
+  if (!key) throw new Error('Missing OpenAI API key');
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${key}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      max_tokens: 300,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image_url', image_url: { url: `data:${imgType};base64,${imageB64}` } },
+          { type: 'text', text: PROMPT(instrument, tf) }
+        ]
+      }]
+    })
+  });
+  if (!res.ok) throw new Error(`OpenAI: ${res.status}`);
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+async function callGemini(imageB64, imgType, instrument, tf) {
+  const key = document.getElementById('geminiKey').value.trim() || localStorage.getItem('geminiKey');
+  if (!key) throw new Error('Missing Gemini API key');
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{
+        parts: [
+          { inline_data: { mime_type: imgType, data: imageB64 } },
+          { text: PROMPT(instrument, tf) }
+        ]
+      }],
+      generationConfig: { maxOutputTokens: 300 }
+    })
+  });
+  if (!res.ok) throw new Error(`Gemini: ${res.status}`);
+  const data = await res.json();
+  return data.candidates[0].content.parts[0].text;
+}
+
+async function callSynthesis(claudeR, openaiR, geminiR, instrument, tf) {
+  const key = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
+  const synthPrompt = `You received three AI analyses of the same ${instrument} ${tf} candlestick chart. Compare them, identify strengths and weaknesses of each, then produce a single combined verdict.
+
+CLAUDE said:
+${claudeR}
+
+CHATGPT said:
+${openaiR}
+
+GEMINI said:
+${geminiR}
+
+Respond in this exact format:
+Prediction: Bullish [OR] Bearish
+Reason: [2-4 sentences combining the best insights from all three analyses]
+
+No markdown. No extra commentary. Just the prediction and reason.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 400,
+      messages: [{ role: 'user', content: synthPrompt }]
+    })
+  });
+  if (!res.ok) throw new Error(`Synthesis: ${res.status}`);
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+function parseResponse(text) {
+  const predMatch = text.match(/prediction:\s*(bullish|bearish|neutral)/i);
+  const reasonMatch = text.match(/reason:\s*(.+?)(?:\n|$)/is);
+  return {
+    prediction: predMatch ? predMatch[1].toLowerCase() : 'neutral',
+    reason: reasonMatch ? reasonMatch[1].trim() : text.trim()
+  };
+}
+
+function renderCard(cardId, modelName, text, cssClass) {
+  const card = document.getElementById(cardId);
+  const parsed = parseResponse(text);
+  card.className = `model-card ${cssClass} ${parsed.prediction}`;
+  card.innerHTML = `
+    <div class="model-name">${modelName}</div>
+    <div class="model-prediction ${parsed.prediction}">${parsed.prediction.toUpperCase()}</div>
+    <div class="model-reason">${parsed.reason}</div>
+  `;
+  return parsed.prediction;
+}
+
+async function analyze() {
+  if (!imageBase64) { showError('Please upload a chart screenshot first.'); return; }
+
+  const ck = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
+  const ok = document.getElementById('openaiKey').value.trim() || localStorage.getItem('openaiKey');
+  const gk = document.getElementById('geminiKey').value.trim() || localStorage.getItem('geminiKey');
+
+  if (!ck || !ok || !gk) {
+    showError('Please enter all three API keys before analyzing.');
+    return;
+  }
+
+  const instrument = document.getElementById('instrument').value;
+  const tf = document.getElementById('timeframe').value;
+  const btn = document.getElementById('analyzeBtn');
+
+  btn.disabled = true;
+  btn.textContent = 'ANALYZING...';
+  btn.classList.add('loading');
+  document.getElementById('progressBar').style.display = 'block';
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('verdictCard').style.display = 'none';
+  document.getElementById('errorMsg').style.display = 'none';
+
+  // Reset cards to loading
+  ['claudeCard','chatgptCard','geminiCard'].forEach((id, i) => {
+    const names = ['CLAUDE','CHATGPT','GEMINI'];
+    const classes = ['claude','chatgpt','gemini'];
+    document.getElementById(id).className = `model-card ${classes[i]}`;
+    document.getElementById(id).innerHTML = `<div class="model-name">${names[i]}</div><div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>`;
+  });
+
+  setProgress(10);
+
+  let claudeR, openaiR, geminiR;
+  const predictions = [];
+
+  try {
+    // Run all three in parallel
+    const [cr, or, gr] = await Promise.allSettled([
+      callClaude(imageBase64, imageType, instrument, tf),
+      callOpenAI(imageBase64, imageType, instrument, tf),
+      callGemini(imageBase64, imageType, instrument, tf)
+    ]);
+
+    setProgress(70);
+
+    claudeR = cr.status === 'fulfilled' ? cr.value : `Error: ${cr.reason.message}`;
+    openaiR = or.status === 'fulfilled' ? or.value : `Error: ${or.reason.message}`;
+    geminiR = gr.status === 'fulfilled' ? gr.value : `Error: ${gr.reason.message}`;
+
+    const p1 = renderCard('claudeCard', 'CLAUDE', claudeR, 'claude');
+    const p2 = renderCard('chatgptCard', 'CHATGPT', openaiR, 'chatgpt');
+    const p3 = renderCard('geminiCard', 'GEMINI', geminiR, 'gemini');
+    predictions.push(p1, p2, p3);
+
+    setProgress(80);
+
+    // Synthesis
+    const synthText = await callSynthesis(claudeR, openaiR, geminiR, instrument, tf);
+    setProgress(100);
+
+    const synth = parseResponse(synthText);
+    document.getElementById('verdictPrediction').textContent = synth.prediction.toUpperCase();
+    document.getElementById('verdictPrediction').className = `verdict-prediction ${synth.prediction}`;
+    document.getElementById('verdictText').textContent = synth.reason;
+
+    // Consensus bars
+    const bulls = predictions.filter(p => p === 'bullish').length;
+    const bears = predictions.filter(p => p === 'bearish').length;
+    const total = predictions.length;
+    const bullPct = Math.round((bulls/total)*100);
+    const bearPct = Math.round((bears/total)*100);
+    document.getElementById('bullFill').style.width = bullPct + '%';
+    document.getElementById('bearFill').style.width = bearPct + '%';
+    document.getElementById('bullPct').textContent = bullPct + '%';
+    document.getElementById('bearPct').textContent = bearPct + '%';
+    document.getElementById('analysisTime').textContent = 'Analyzed at ' + new Date().toLocaleTimeString();
+    document.getElementById('verdictCard').style.display = 'block';
+
+  } catch (err) {
+    showError('Analysis failed: ' + err.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'ANALYZE CHART';
+  btn.classList.remove('loading');
+  setTimeout(() => {
+    document.getElementById('progressBar').style.display = 'none';
+    setProgress(0);
+  }, 1000);
+}
+
+function reset() {
+  imageBase64 = null;
+  imageType = null;
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('previewImg').src = '';
+  document.getElementById('uploadIcon').style.display = 'block';
+  document.getElementById('uploadText').textContent = 'Drop your chart screenshot here';
+  document.getElementById('uploadSub').textContent = 'or click to browse — PNG, JPG supported';
+  document.getElementById('uploadZone').classList.remove('has-image');
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('fileInput').value = '';
+}
+</script>
+</body>
+</html>
