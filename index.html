@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* Grid background */
   body::before {
     content: '';
     position: fixed;
@@ -52,9 +52,7 @@
     z-index: 1;
   }
 
-  header {
-    margin-bottom: 40px;
-  }
+  header { margin-bottom: 40px; }
 
   .logo {
     font-size: 11px;
@@ -87,7 +85,6 @@
     font-family: 'Space Mono', monospace;
   }
 
-  /* API Keys Section */
   .keys-section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -126,7 +123,7 @@
 
   .keys-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
 
@@ -171,7 +168,6 @@
   }
   .save-keys:hover { background: var(--accent); color: var(--bg); }
 
-  /* Upload Section */
   .upload-zone {
     border: 2px dashed var(--border);
     border-radius: 16px;
@@ -190,23 +186,9 @@
   }
   .upload-zone.has-image { padding: 16px; }
 
-  .upload-icon {
-    font-size: 40px;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .upload-text {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .upload-sub {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .upload-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .upload-text { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .upload-sub { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
   #fileInput { display: none; }
 
@@ -217,7 +199,6 @@
     display: none;
   }
 
-  /* Instrument selector */
   .controls-row {
     display: flex;
     gap: 12px;
@@ -242,7 +223,6 @@
   }
   .instrument-select:focus { border-color: var(--accent); }
 
-  /* Analyze Button */
   .analyze-btn {
     flex: 2;
     background: var(--accent);
@@ -256,14 +236,10 @@
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
   }
   .analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,255,136,0.3); }
   .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-  .analyze-btn.loading { background: var(--muted); }
 
-  /* Progress */
   .progress-bar {
     height: 3px;
     background: var(--border);
@@ -280,7 +256,6 @@
     border-radius: 2px;
   }
 
-  /* Results */
   .results { display: none; }
 
   .results-header {
@@ -316,10 +291,9 @@
     top: 0; left: 0; right: 0;
     height: 3px;
   }
-  .model-card.claude::before { background: var(--accent3); }
-  .model-card.chatgpt::before { background: #74aa9c; }
-  .model-card.gemini::before { background: #4285f4; }
-
+  .model-card.analyst1::before { background: var(--accent3); }
+  .model-card.analyst2::before { background: #74aa9c; }
+  .model-card.analyst3::before { background: #4285f4; }
   .model-card.bullish { border-color: rgba(0,255,136,0.3); }
   .model-card.bearish { border-color: rgba(255,68,102,0.3); }
 
@@ -341,11 +315,7 @@
   .model-prediction.bearish { color: var(--bear); }
   .model-prediction.neutral { color: var(--neutral); }
 
-  .model-reason {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
+  .model-reason { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
   .model-loading {
     display: flex;
@@ -356,13 +326,9 @@
     font-size: 12px;
   }
 
-  .dot-pulse {
-    display: flex;
-    gap: 4px;
-  }
+  .dot-pulse { display: flex; gap: 4px; }
   .dot-pulse span {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--accent);
     animation: pulse 1.2s infinite;
@@ -374,7 +340,6 @@
     50% { opacity: 1; transform: scale(1); }
   }
 
-  /* Verdict */
   .verdict-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -410,13 +375,8 @@
   .verdict-prediction.bearish { color: var(--bear); }
   .verdict-prediction.neutral { color: var(--neutral); }
 
-  .verdict-text {
-    font-size: 15px;
-    line-height: 1.7;
-    color: #aaa;
-  }
+  .verdict-text { font-size: 15px; line-height: 1.7; color: #aaa; }
 
-  /* Consensus bar */
   .consensus-row {
     display: flex;
     gap: 8px;
@@ -437,11 +397,7 @@
     border-radius: 4px;
     overflow: hidden;
   }
-  .consensus-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.8s ease;
-  }
+  .consensus-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
   .consensus-fill.bullish { background: var(--bull); }
   .consensus-fill.bearish { background: var(--bear); }
   .consensus-pct {
@@ -453,7 +409,6 @@
     flex-shrink: 0;
   }
 
-  /* Error */
   .error-msg {
     background: rgba(255,68,102,0.1);
     border: 1px solid rgba(255,68,102,0.3);
@@ -466,7 +421,6 @@
     display: none;
   }
 
-  /* Reset btn */
   .reset-btn {
     background: transparent;
     border: 1px solid var(--border);
@@ -494,10 +448,9 @@
   <header>
     <div class="logo">// AI CONSENSUS ENGINE</div>
     <h1>Chart <span>Analyzer</span></h1>
-    <div class="subtitle">Claude · ChatGPT · Gemini — one upload, one verdict</div>
+    <div class="subtitle">Analyst A · Analyst B · Analyst C — one upload, one verdict</div>
   </header>
 
-  <!-- API Keys -->
   <div class="keys-section">
     <div class="keys-header">
       <div class="keys-title">// API Keys</div>
@@ -506,15 +459,11 @@
     <div id="keysBody">
       <div class="keys-grid">
         <div class="key-group">
-          <label>ANTHROPIC (CLAUDE)</label>
-          <input type="password" id="claudeKey" placeholder="sk-ant-..." oninput="validateKey(this)">
-        </div>
-        <div class="key-group">
-          <label>OPENAI (CHATGPT)</label>
+          <label>OPENAI KEY (REQUIRED)</label>
           <input type="password" id="openaiKey" placeholder="sk-..." oninput="validateKey(this)">
         </div>
         <div class="key-group">
-          <label>GOOGLE (GEMINI)</label>
+          <label>GOOGLE GEMINI KEY (REQUIRED)</label>
           <input type="password" id="geminiKey" placeholder="AIza..." oninput="validateKey(this)">
         </div>
       </div>
@@ -522,7 +471,6 @@
     </div>
   </div>
 
-  <!-- Upload -->
   <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
     ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
     <span class="upload-icon" id="uploadIcon">📊</span>
@@ -532,7 +480,6 @@
   </div>
   <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
 
-  <!-- Controls -->
   <div class="controls-row">
     <select class="instrument-select" id="instrument">
       <option value="USDJPY">USD/JPY</option>
@@ -551,28 +498,25 @@
     <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">ANALYZE CHART</button>
   </div>
 
-  <!-- Error -->
   <div class="error-msg" id="errorMsg"></div>
 
-  <!-- Progress -->
   <div class="progress-bar" id="progressBar">
     <div class="progress-fill" id="progressFill"></div>
   </div>
 
-  <!-- Results -->
   <div class="results" id="results">
     <div class="results-header">// Individual Model Analysis</div>
     <div class="models-grid">
-      <div class="model-card claude" id="claudeCard">
-        <div class="model-name">CLAUDE</div>
+      <div class="model-card analyst1" id="card1">
+        <div class="model-name">ANALYST A</div>
         <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
       </div>
-      <div class="model-card chatgpt" id="chatgptCard">
-        <div class="model-name">CHATGPT</div>
+      <div class="model-card analyst2" id="card2">
+        <div class="model-name">ANALYST B</div>
         <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
       </div>
-      <div class="model-card gemini" id="geminiCard">
-        <div class="model-name">GEMINI</div>
+      <div class="model-card analyst3" id="card3">
+        <div class="model-name">ANALYST C</div>
         <div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>
       </div>
     </div>
@@ -603,21 +547,16 @@ let imageBase64 = null;
 let imageType = null;
 let keysVisible = true;
 
-// Load saved keys
 window.onload = () => {
-  const ck = localStorage.getItem('claudeKey');
   const ok = localStorage.getItem('openaiKey');
   const gk = localStorage.getItem('geminiKey');
-  if (ck) { document.getElementById('claudeKey').value = ck; validateKey(document.getElementById('claudeKey')); }
   if (ok) { document.getElementById('openaiKey').value = ok; validateKey(document.getElementById('openaiKey')); }
   if (gk) { document.getElementById('geminiKey').value = gk; validateKey(document.getElementById('geminiKey')); }
 };
 
 function saveKeys() {
-  const ck = document.getElementById('claudeKey').value.trim();
   const ok = document.getElementById('openaiKey').value.trim();
   const gk = document.getElementById('geminiKey').value.trim();
-  if (ck) localStorage.setItem('claudeKey', ck);
   if (ok) localStorage.setItem('openaiKey', ok);
   if (gk) localStorage.setItem('geminiKey', gk);
   const btn = document.querySelector('.save-keys');
@@ -635,23 +574,15 @@ function toggleKeys() {
   document.querySelector('.keys-toggle').textContent = keysVisible ? 'HIDE' : 'SHOW';
 }
 
-function handleDragOver(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.add('drag-over');
-}
-function handleDragLeave() {
-  document.getElementById('uploadZone').classList.remove('drag-over');
-}
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag-over'); }
+function handleDragLeave() { document.getElementById('uploadZone').classList.remove('drag-over'); }
 function handleDrop(e) {
   e.preventDefault();
   document.getElementById('uploadZone').classList.remove('drag-over');
   const file = e.dataTransfer.files[0];
   if (file && file.type.startsWith('image/')) processFile(file);
 }
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (file) processFile(file);
-}
+function handleFile(e) { const file = e.target.files[0]; if (file) processFile(file); }
 
 function processFile(file) {
   imageType = file.type;
@@ -673,147 +604,120 @@ function showError(msg) {
   const el = document.getElementById('errorMsg');
   el.textContent = msg;
   el.style.display = 'block';
-  setTimeout(() => el.style.display = 'none', 6000);
+  setTimeout(() => el.style.display = 'none', 8000);
 }
 
-function setProgress(pct) {
-  document.getElementById('progressFill').style.width = pct + '%';
-}
+function setProgress(pct) { document.getElementById('progressFill').style.width = pct + '%'; }
 
-const PROMPT = (instrument, tf) =>
-  `You are analyzing a ${instrument} ${tf} candlestick chart. Focus ONLY on the current active candle (the rightmost, still-forming candle). Predict whether it will close BULLISH or BEARISH. Keep your response short and in this exact format:
+const PROMPTS = [
+  (i, tf) => `You are a technical analyst focused on price action and candlestick patterns. Analyze this ${i} ${tf} chart. Look at the current active candle (rightmost, still forming). Predict if it will close BULLISH or BEARISH based on candlestick structure, wicks, and recent momentum.\n\nRespond in this exact format:\nPrediction: Bullish\nReason: [1-2 sentences]\n\nOR\n\nPrediction: Bearish\nReason: [1-2 sentences]`,
 
-Prediction: Bullish [OR] Bearish
-Reason: [1-3 sentences maximum, focus on the single strongest signal visible]
+  (i, tf) => `You are a market structure analyst. Analyze this ${i} ${tf} chart focusing on support/resistance levels and market structure. Look at the current active candle (rightmost). Predict if it will close BULLISH or BEARISH based on structural levels and order flow clues.\n\nRespond in this exact format:\nPrediction: Bullish\nReason: [1-2 sentences]\n\nOR\n\nPrediction: Bearish\nReason: [1-2 sentences]`,
 
-Do not overexplain. No markdown. No headers.`;
+  (i, tf) => `You are a momentum and trend analyst. Analyze this ${i} ${tf} chart focusing on trend direction, momentum, and the sequence of recent candles. Look at the current active candle (rightmost). Predict if it will close BULLISH or BEARISH based on trend and momentum signals.\n\nRespond in this exact format:\nPrediction: Bullish\nReason: [1-2 sentences]\n\nOR\n\nPrediction: Bearish\nReason: [1-2 sentences]`
+];
 
-async function callClaude(imageB64, imgType, instrument, tf) {
-  const key = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
-  if (!key) throw new Error('Missing Claude API key');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: imgType, data: imageB64 } },
-          { type: 'text', text: PROMPT(instrument, tf) }
-        ]
-      }]
-    })
-  });
-  if (!res.ok) throw new Error(`Claude: ${res.status}`);
-  const data = await res.json();
-  return data.content[0].text;
-}
-
-async function callOpenAI(imageB64, imgType, instrument, tf) {
+async function callOpenAI(imageB64, imgType, prompt) {
   const key = document.getElementById('openaiKey').value.trim() || localStorage.getItem('openaiKey');
   if (!key) throw new Error('Missing OpenAI API key');
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${key}`
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
     body: JSON.stringify({
       model: 'gpt-4o',
-      max_tokens: 300,
+      max_tokens: 200,
       messages: [{
         role: 'user',
         content: [
           { type: 'image_url', image_url: { url: `data:${imgType};base64,${imageB64}` } },
-          { type: 'text', text: PROMPT(instrument, tf) }
+          { type: 'text', text: prompt }
         ]
       }]
     })
   });
-  if (!res.ok) throw new Error(`OpenAI: ${res.status}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`OpenAI ${res.status}: ${err.error?.message || 'unknown error'}`);
+  }
   const data = await res.json();
   return data.choices[0].message.content;
 }
 
-async function callGemini(imageB64, imgType, instrument, tf) {
+async function callGemini(imageB64, imgType, prompt) {
   const key = document.getElementById('geminiKey').value.trim() || localStorage.getItem('geminiKey');
   if (!key) throw new Error('Missing Gemini API key');
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      contents: [{
-        parts: [
-          { inline_data: { mime_type: imgType, data: imageB64 } },
-          { text: PROMPT(instrument, tf) }
-        ]
-      }],
-      generationConfig: { maxOutputTokens: 300 }
+      contents: [{ parts: [
+        { inline_data: { mime_type: imgType, data: imageB64 } },
+        { text: prompt }
+      ]}],
+      generationConfig: { maxOutputTokens: 200 }
     })
   });
-  if (!res.ok) throw new Error(`Gemini: ${res.status}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Gemini ${res.status}: ${err.error?.message || 'unknown error'}`);
+  }
   const data = await res.json();
   return data.candidates[0].content.parts[0].text;
 }
 
-async function callSynthesis(claudeR, openaiR, geminiR, instrument, tf) {
-  const key = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
-  const synthPrompt = `You received three AI analyses of the same ${instrument} ${tf} candlestick chart. Compare them, identify strengths and weaknesses of each, then produce a single combined verdict.
+async function callSynthesis(r1, r2, r3, instrument, tf) {
+  const key = document.getElementById('openaiKey').value.trim() || localStorage.getItem('openaiKey');
+  const synthPrompt = `Three independent AI analysts just analyzed the same ${instrument} ${tf} candlestick chart. Combine their views into one final verdict.
 
-CLAUDE said:
-${claudeR}
+Analyst A (Price Action focus):
+${r1}
 
-CHATGPT said:
-${openaiR}
+Analyst B (Market Structure focus):
+${r2}
 
-GEMINI said:
-${geminiR}
+Analyst C (Momentum/Trend focus):
+${r3}
+
+Identify what they agree on, note key disagreements, and produce a final verdict.
 
 Respond in this exact format:
-Prediction: Bullish [OR] Bearish
-Reason: [2-4 sentences combining the best insights from all three analyses]
+Prediction: Bullish
+Reason: [2-3 sentences combining the strongest insights]
 
-No markdown. No extra commentary. Just the prediction and reason.`;
+OR
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+Prediction: Bearish
+Reason: [2-3 sentences combining the strongest insights]`;
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01'
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 400,
+      model: 'gpt-4o',
+      max_tokens: 300,
       messages: [{ role: 'user', content: synthPrompt }]
     })
   });
-  if (!res.ok) throw new Error(`Synthesis: ${res.status}`);
+  if (!res.ok) throw new Error(`Synthesis failed: ${res.status}`);
   const data = await res.json();
-  return data.content[0].text;
+  return data.choices[0].message.content;
 }
 
 function parseResponse(text) {
   const predMatch = text.match(/prediction:\s*(bullish|bearish|neutral)/i);
-  const reasonMatch = text.match(/reason:\s*(.+?)(?:\n|$)/is);
+  const reasonMatch = text.match(/reason:\s*(.+?)(?:\n\n|$)/is);
   return {
     prediction: predMatch ? predMatch[1].toLowerCase() : 'neutral',
-    reason: reasonMatch ? reasonMatch[1].trim() : text.trim()
+    reason: reasonMatch ? reasonMatch[1].trim() : text.trim().substring(0, 200)
   };
 }
 
-function renderCard(cardId, modelName, text, cssClass) {
+function renderCard(cardId, label, cssClass, text) {
   const card = document.getElementById(cardId);
   const parsed = parseResponse(text);
   card.className = `model-card ${cssClass} ${parsed.prediction}`;
   card.innerHTML = `
-    <div class="model-name">${modelName}</div>
+    <div class="model-name">${label}</div>
     <div class="model-prediction ${parsed.prediction}">${parsed.prediction.toUpperCase()}</div>
     <div class="model-reason">${parsed.reason}</div>
   `;
@@ -822,15 +726,9 @@ function renderCard(cardId, modelName, text, cssClass) {
 
 async function analyze() {
   if (!imageBase64) { showError('Please upload a chart screenshot first.'); return; }
-
-  const ck = document.getElementById('claudeKey').value.trim() || localStorage.getItem('claudeKey');
   const ok = document.getElementById('openaiKey').value.trim() || localStorage.getItem('openaiKey');
   const gk = document.getElementById('geminiKey').value.trim() || localStorage.getItem('geminiKey');
-
-  if (!ck || !ok || !gk) {
-    showError('Please enter all three API keys before analyzing.');
-    return;
-  }
+  if (!ok || !gk) { showError('Please enter both API keys and click Save Keys Locally.'); return; }
 
   const instrument = document.getElementById('instrument').value;
   const tf = document.getElementById('timeframe').value;
@@ -838,48 +736,34 @@ async function analyze() {
 
   btn.disabled = true;
   btn.textContent = 'ANALYZING...';
-  btn.classList.add('loading');
   document.getElementById('progressBar').style.display = 'block';
   document.getElementById('results').style.display = 'block';
   document.getElementById('verdictCard').style.display = 'none';
   document.getElementById('errorMsg').style.display = 'none';
 
-  // Reset cards to loading
-  ['claudeCard','chatgptCard','geminiCard'].forEach((id, i) => {
-    const names = ['CLAUDE','CHATGPT','GEMINI'];
-    const classes = ['claude','chatgpt','gemini'];
+  ['card1','card2','card3'].forEach((id, i) => {
+    const labels = ['ANALYST A','ANALYST B','ANALYST C'];
+    const classes = ['analyst1','analyst2','analyst3'];
     document.getElementById(id).className = `model-card ${classes[i]}`;
-    document.getElementById(id).innerHTML = `<div class="model-name">${names[i]}</div><div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>`;
+    document.getElementById(id).innerHTML = `<div class="model-name">${labels[i]}</div><div class="model-loading"><div class="dot-pulse"><span></span><span></span><span></span></div> Analyzing...</div>`;
   });
 
   setProgress(10);
 
-  let claudeR, openaiR, geminiR;
-  const predictions = [];
-
   try {
-    // Run all three in parallel
-    const [cr, or, gr] = await Promise.allSettled([
-      callClaude(imageBase64, imageType, instrument, tf),
-      callOpenAI(imageBase64, imageType, instrument, tf),
-      callGemini(imageBase64, imageType, instrument, tf)
+    const [r1, r2, r3] = await Promise.all([
+      callOpenAI(imageBase64, imageType, PROMPTS[0](instrument, tf)),
+      callOpenAI(imageBase64, imageType, PROMPTS[1](instrument, tf)),
+      callGemini(imageBase64, imageType, PROMPTS[2](instrument, tf))
     ]);
 
-    setProgress(70);
+    setProgress(75);
 
-    claudeR = cr.status === 'fulfilled' ? cr.value : `Error: ${cr.reason.message}`;
-    openaiR = or.status === 'fulfilled' ? or.value : `Error: ${or.reason.message}`;
-    geminiR = gr.status === 'fulfilled' ? gr.value : `Error: ${gr.reason.message}`;
+    const p1 = renderCard('card1', 'ANALYST A — PRICE ACTION', 'analyst1', r1);
+    const p2 = renderCard('card2', 'ANALYST B — STRUCTURE', 'analyst2', r2);
+    const p3 = renderCard('card3', 'ANALYST C — MOMENTUM', 'analyst3', r3);
 
-    const p1 = renderCard('claudeCard', 'CLAUDE', claudeR, 'claude');
-    const p2 = renderCard('chatgptCard', 'CHATGPT', openaiR, 'chatgpt');
-    const p3 = renderCard('geminiCard', 'GEMINI', geminiR, 'gemini');
-    predictions.push(p1, p2, p3);
-
-    setProgress(80);
-
-    // Synthesis
-    const synthText = await callSynthesis(claudeR, openaiR, geminiR, instrument, tf);
+    const synthText = await callSynthesis(r1, r2, r3, instrument, tf);
     setProgress(100);
 
     const synth = parseResponse(synthText);
@@ -887,12 +771,11 @@ async function analyze() {
     document.getElementById('verdictPrediction').className = `verdict-prediction ${synth.prediction}`;
     document.getElementById('verdictText').textContent = synth.reason;
 
-    // Consensus bars
+    const predictions = [p1, p2, p3];
     const bulls = predictions.filter(p => p === 'bullish').length;
     const bears = predictions.filter(p => p === 'bearish').length;
-    const total = predictions.length;
-    const bullPct = Math.round((bulls/total)*100);
-    const bearPct = Math.round((bears/total)*100);
+    const bullPct = Math.round((bulls/3)*100);
+    const bearPct = Math.round((bears/3)*100);
     document.getElementById('bullFill').style.width = bullPct + '%';
     document.getElementById('bearFill').style.width = bearPct + '%';
     document.getElementById('bullPct').textContent = bullPct + '%';
@@ -900,22 +783,18 @@ async function analyze() {
     document.getElementById('analysisTime').textContent = 'Analyzed at ' + new Date().toLocaleTimeString();
     document.getElementById('verdictCard').style.display = 'block';
 
-  } catch (err) {
-    showError('Analysis failed: ' + err.message);
+  } catch(err) {
+    showError('Error: ' + err.message);
+    console.error(err);
   }
 
   btn.disabled = false;
   btn.textContent = 'ANALYZE CHART';
-  btn.classList.remove('loading');
-  setTimeout(() => {
-    document.getElementById('progressBar').style.display = 'none';
-    setProgress(0);
-  }, 1000);
+  setTimeout(() => { document.getElementById('progressBar').style.display = 'none'; setProgress(0); }, 1000);
 }
 
 function reset() {
-  imageBase64 = null;
-  imageType = null;
+  imageBase64 = null; imageType = null;
   document.getElementById('previewImg').style.display = 'none';
   document.getElementById('previewImg').src = '';
   document.getElementById('uploadIcon').style.display = 'block';
